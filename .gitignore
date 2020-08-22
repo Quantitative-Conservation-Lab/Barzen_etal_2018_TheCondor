@@ -1,6 +1,7 @@
-.Rproj.user
+*.Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 /unused
-/unused-documents
+/unused
+.DS_store
