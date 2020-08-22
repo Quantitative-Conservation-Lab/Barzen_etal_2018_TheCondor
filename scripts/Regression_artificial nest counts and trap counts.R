@@ -1,4 +1,8 @@
-setwd("~/Projects - Old/Cranes/Eastern Migratory Population/Nesting Research/Barzen et al./data")
+###########
+#LIBRARIES
+library("here")
+library("jagsUI")
+###########
 
 #This code performs the regression analysis for artificial nests in Barzen et al. 2018 
 #The purpose is to evaluate whether CO2 traps at artificial nests provided a useful index of black fly abundance as measured at nearby traps
@@ -8,11 +12,9 @@ setwd("~/Projects - Old/Cranes/Eastern Migratory Population/Nesting Research/Bar
 #counts of the number of each species in the nests (on the artificial egg and on the artificial bird)
 
 #read in data for 3 species (S. annulus, S. johannseni, and S. meridionale) 
-sann <- read.csv("artificial_nests_S.ann.csv")
-sjoh <- read.csv("artificial_nests_S.joh.csv")
-smer <- read.csv("artificial_nests_S.mer.csv")
-
-setwd("~/Projects - Old/Cranes/Eastern Migratory Population/Nesting Research/Barzen et al./analysis")
+sann <- read.csv(here("data","artificial_nests_S.ann.csv"))
+sjoh <- read.csv(here("data","artificial_nests_S.joh.csv"))
+smer <- read.csv(here("data","artificial_nests_S.mer.csv"))
 
 ##################################S. annulus##############################
 #see how many of the triplet have at last one data point missing

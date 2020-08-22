@@ -6,11 +6,11 @@ n.11 <- length(which(data.set$Year==2011))
 n.12 <- length(which(data.set$Year==2012))
 n.13 <- length(which(data.set$Year==2013))
 
-flies.09 <- read.csv("All_INSECTS_Working2009.csv")
-flies.10 <- read.csv("All_INSECTS_Working2010.csv")
-flies.11 <- read.csv("All_INSECTS_Working2011.csv")
-flies.12 <- read.csv("All_INSECTS_Working2012.csv")
-flies.13 <- read.csv("All_INSECTS_Working2013.csv")
+flies.09 <- read.csv(here("data","All_INSECTS_Working2009.csv"))
+flies.10 <- read.csv(here("data","All_INSECTS_Working2010.csv"))
+flies.11 <- read.csv(here("data","All_INSECTS_Working2011.csv"))
+flies.12 <- read.csv(here("data","All_INSECTS_Working2012.csv"))
+flies.13 <- read.csv(here("data","All_INSECTS_Working2013.csv"))
 
 ##Set up trap locations in 2009
 Trap.Locs.09 <- matrix(nrow=7,ncol=2)

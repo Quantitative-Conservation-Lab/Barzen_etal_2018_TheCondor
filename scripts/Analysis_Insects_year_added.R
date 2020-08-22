@@ -1,5 +1,8 @@
-setwd("C:\\Users\\conve\\Dropbox\\Projects - Old\\Cranes\\Eastern Migratory Population\\Nesting Research\\Barzen et al.\\data")
-
+###########
+#LIBRARIES
+library("here")
+library("jagsUI")
+###########
 
 #######NEST WITH TRT: 9/10 PRE, 11/12 TRT, 13 POST 
 
@@ -16,7 +19,7 @@ setwd("C:\\Users\\conve\\Dropbox\\Projects - Old\\Cranes\\Eastern Migratory Popu
 #2013 last nest day is    Last Day = June 30 
 
 ##Encounter Histories
-data.set <- read.csv("CraneNestData_Final.csv")
+data.set <- read.csv(here("data","CraneNestData_Final.csv"))
 data.set[,1] <- as.character(data.set[,1])
 data.set <- data.set[c(which(data.set$Include_YN=="Y")),]
 
@@ -139,7 +142,8 @@ pair.all <- pair
 n.pair.all <- n.pair
 
 ##########################################INSECT DATA##########################################
-source("Insects.r")
+source(here::here('data','Insects.r'))
+
 Insect.Predictors <- Insect.Predictors()
 Ann.ln <- as.matrix(Insect.Predictors$Ann.ln)
 Joh.ln <- as.matrix(Insect.Predictors$Joh.ln)
@@ -281,7 +285,6 @@ for(y in 1:5){rho.JohMer.ln[y] ~ dnorm(0,0.001)}
 
 start <- Sys.time()
 
-library("jagsUI")
 jagsfit.1 <- jags(data=dataset, inits=inits, parameters.to.save=parameters, n.chains=3, n.burnin = 10000, n.iter=50000, n.thin=1, model.file="nestmodel.txt", parallel=TRUE)
 
 end <- Sys.time() - start

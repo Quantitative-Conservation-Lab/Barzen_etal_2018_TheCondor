@@ -1,21 +1,25 @@
-setwd("C:\\Users\\sconver\\Documents\\Projects - Old\\Cranes\\Eastern Migratory Population\\Nesting Research\\Data and Analyses\\Final Nest Survival Analyses")
+###########
+#LIBRARIES
+library("here")
+library("jagsUI")
+###########
 
 #######NEST WITH TRT: 9/10 PRE, 11/12 TRT, 13 POST 
 
 ##General Date Info
 #2009 first nest day is   Day 1 = April 2
-#2009 last nest day is    Last Day = June 14 
+#2009 last nest day is    Day 73 = June 14 
 #2010 first nest day is   Day 1 = April 1 
-#2010 last nest day is    Last Day = June 11 
+#2010 last nest day is    Day 73 = June 11 
 #2011 first nest day is   Day 1 = April 9 
-#2011 last nest day is    Last Day = June 4 
+#2011 last nest day is    Day 73 = June 4 
 #2012 first nest day is   Day 1 = March 26 
-#2012 last nest day is    Last Day = June 13 
+#2012 last nest day is    Day 73 = June 10 
 #2013 first nest day is   Day 1 = April 15 
-#2013 last nest day is    Last Day = June 30 
+#2013 last nest day is    Day 73 = June 30 
 
 ##Encounter Histories
-data.set <- read.csv("CraneNestData_Final.csv")
+data.set <- read.csv(here("data","CraneNestData_Final.csv"))
 data.set[,1] <- as.character(data.set[,1])
 data.set <- data.set[c(which(data.set$Include_YN=="Y")),]
 
@@ -30,13 +34,6 @@ for(i in 1:nrow(enc.hist)){
   Last[i] <- as.integer(data.set$First.Day.Dead[i])
 }
 n.ind <- nrow(data.set)
-
-#Count of nests by year
-n.09 <- length(which(data.set$Year==2009)) 
-n.10 <- length(which(data.set$Year==2010))
-n.11 <- length(which(data.set$Year==2011))
-n.12 <- length(which(data.set$Year==2012))
-n.13 <- length(which(data.set$Year==2013))
  
 ##Set up predictor variables
 
@@ -46,7 +43,7 @@ attempt <- data.set$Nest.Attempt
 attempt[which(attempt == 3)] <- 2
 attempt <- attempt-1
 
-pair <- as.numeric(as.factor(as.numeric(data.set$Pair)))
+pair <- as.numeric(as.factor(data.set$Pair))
 n.pair <- length(unique(pair))
 
 Age.M <- data.set$Age.Male
@@ -148,7 +145,8 @@ pair.all <- pair
 n.pair.all <- n.pair
 
 ##########################################INSECT DATA##########################################
-source("Insects.r")
+source(here::here('data','Insects.r'))
+
 Insect.Predictors <- Insect.Predictors()
 Ann.ln <- as.matrix(Insect.Predictors$Ann.ln)
 Joh.ln <- as.matrix(Insect.Predictors$Joh.ln)
@@ -168,7 +166,6 @@ St.Comb.ln <- as.matrix(Insect.Predictors$St.Comb.ln)
 
 
 ######################### BUGS INPUT #########################
-
 
 #data
 dataset <- list(enc.hist=enc.hist.all,First=First.all,Last=Last.all,n=n.ind.all,attempt=attempt.all,year=year.all,n.year=n.year.all,pair=pair.all,n.pair=n.pair.all,AnnJoh.ln=AnnJoh.ln,CumAtt.F=CumAtt.F,CGenAny=CGenAny)
@@ -202,7 +199,7 @@ for(i in 1:n){
 #MODEL PRIORS 
 tau.total ~ dgamma(3.29,7.8)
 K <- w.a + w.b + w.c
-tau.model <- K*tau.total
+tau.model <- tau.total/K
 
 w.a ~ dbern(0.5)
 w.b ~ dbern(0.5)
@@ -244,7 +241,6 @@ for(y in 1:n.year){rho.AnnJoh.ln[y] ~ dnorm(0,0.001)}
 
 start <- Sys.time()
 
-library("jagsUI")
 jagsfit.1 <- jags(data=dataset, inits=inits, parameters.to.save=parameters, n.chains=3, n.burnin = 10000, n.iter=50000, n.thin=1, model.file="nestmodel.txt", parallel=TRUE)
 
 end <- Sys.time() - start
